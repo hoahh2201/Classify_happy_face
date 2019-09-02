@@ -1,0 +1,102 @@
+{% extends 'frontend/layout.html' %}
+
+{% block content %}
+<!-- start banner Area -->
+<section class="banner-area">
+    <div class="container">
+        <div class="row fullscreen align-items-center justify-content-start">
+            <div class="col-lg-12">
+                <div class="active-banner-slider owl-carousel">
+                    <!-- single-slide -->
+                    <div class="row single-slide align-items-center d-flex">
+                        <div class="col-lg-5 col-md-6">
+
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="banner-img">
+                                <img class="img-fluid" src="img/banner/banner-img.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- single-slide -->
+                    <div class="row single-slide">
+                        <div class="booth">
+                            <video id="video" width="400" height="300"></video>
+
+
+                            <canvas id="canvas" width="400" height="300"></canvas>
+
+
+
+
+
+                            <div>
+
+                            </div>
+
+
+
+                        </div>
+                        <br>
+                        <script src="../static/js/camera.js"></script>
+<!--                        <a href="#" id="downloader" onclick="download()" download="media/image.jpeg">Download!</a>-->
+
+                    </div>
+                    <div>
+                        <a href="#" id="capture">
+                            <input type="button" class="btn btn-success"
+                                value="Take Photo" onclick="download()" download ="media/image.jpg">
+                        </a>
+
+                        <a href="#" id="predict">
+                            <input type="button" class="btn btn-success"
+                               value="Predict">
+                        </a>
+                            <input type="button" class="btn btn-success"
+                               value="Correct">
+                    </div>
+
+
+                    <script type="text/javascript">
+                        $("#predict").click(function(){
+                            $('#result').text('  Predicting...');
+                            var $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+                            var canvasObj = document.getElementById("canvas");
+                            var img = canvasObj.toDataURL('image/jpeg');
+                            $.ajax({
+                                type: "POST",
+                                url: $SCRIPT_ROOT + "/upload/",
+                                data: img,
+                                success: function(data){
+                                    $('#result').text('Predicted Output: ' + data);
+                                }
+                            });
+                        });
+                    </script>
+
+
+
+                    <div>
+                        <h1 id='result'></h1>
+                    </div>
+
+
+
+
+                    <script src="http://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+                    <script src='{{ url_for("static", filename="js/abc_test.js")}}'></script>
+                    <script src='{{ url_for("static", filename="js/html2canvas.min.js")}}'></script>
+                    <script src='{{ url_for("static", filename="js/promise.min.js")}}'></script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End banner Area -->
+
+
+<!-- Start related-product Area -->
+
+{% endblock %}
+

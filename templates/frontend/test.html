@@ -1,0 +1,128 @@
+<!DOCTYPE HTML >
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> #SAVE_CANVAS_TEST# </title>
+    <meta
+        name   ="author"
+        content="John Mark Isaac Madison"
+    >
+    <!-- EMAIL: J4M4I5M7 -[ＡＴ]- Hotmail.com -->
+</head>
+<body>
+
+<canvas id="DOM_CANVAS"
+        width ="300"
+        height="300"
+></canvas>
+
+<div id="controls">
+    <button type="button" style="width:300px;"
+            onclick="obj.SAVE_CANVAS()">
+        SAVE_CANVAS ( Dynamically Made Canvas )
+    </button>
+
+    <button type="button" style="width:300px;"
+            onclick="obj.SAVE_CANVAS('DOM_CANVAS')">
+        SAVE_CANVAS ( Canvas In HTML Code )
+    </button>
+</div>
+
+<script>
+var obj = new MyTestCodeClass();
+function MyTestCodeClass(){
+
+    //Publically exposed functions:
+    this.SAVE_CANVAS = SAVE_CANVAS;
+
+    //:Private:
+    var _canvas;
+    var _canvas_id = "ID_OF_DYNAMIC_CANVAS";
+    var _name_hash_counter = 0;
+
+    //:Create Canvas:
+    (function _constructor(){
+        var D   = document;
+        var CE  = D.createElement.bind(D);
+        _canvas = CE("canvas");
+        _canvas.width = 300;
+        _canvas.height= 300;
+        _canvas.id    = _canvas_id;
+    })();
+
+    //:Before saving the canvas, fill it so
+    //:we can see it. For demonstration of code.
+    function _fillCanvas(input_canvas, r,g,b){
+        var ctx = input_canvas.getContext("2d");
+        var c   = input_canvas;
+
+        ctx.fillStyle = "rgb("+r+","+g+","+b+")";
+        ctx.fillRect(0, 0, c.width, c.height);
+    }
+
+    //:Saves canvas. If optional_id supplied,
+    //:will save canvas off the DOM. If not,
+    //:will save the dynamically created canvas.
+    function SAVE_CANVAS(optional_id){
+
+        var c = _getCanvas( optional_id );
+
+        //:Debug Code: Color canvas from DOM
+        //:green, internal canvas red.
+        if( optional_id ){
+            _fillCanvas(c,0,255,0);
+        }else{
+            _fillCanvas(c,255,0,0);
+        }
+
+        _saveCanvas( c );
+    }
+
+    //:If optional_id supplied, get canvas
+    //:from DOM. Else, get internal dynamically
+    //:created canvas.
+    function _getCanvas( optional_id ){
+        var c = null; //:canvas.
+        if( typeof optional_id == "string"){
+            var id = optional_id;
+            var  d = document;
+            var c  = d.getElementById( id );
+        }else{
+            c = _canvas;
+        }
+        return c;
+    }
+
+    function _saveCanvas( canvas ){
+        if(!window){ alert("[WINDOW_IS_NULL]"); }
+
+        //:We want to give the window a unique
+        //:name so that we can save multiple times
+        //:without having to close previous
+        //:windows.
+        _name_hash_counter++              ;
+        var NHC = _name_hash_counter      ;
+        var URL = 'about:blank'           ;
+        var name= 'UNIQUE_WINDOW_ID' + NHC;
+        var w=window.open( URL, name )    ;
+
+        if(!w){ alert("[W_IS_NULL]");}
+
+        //:Create the page contents,
+        //:THEN set the tile. Order Matters.
+        var DW = ""                        ;
+        DW += "<img src='"                 ;
+        DW += canvas.toDataURL("image/png");
+        DW += "' alt='from canvas'/>"      ;
+        w.document.write(DW)               ;
+        w.document.title = "NHC"+NHC       ;
+
+    }
+
+}//:end class
+
+</script>
+
+</body>
+<!-- In IE: Script cannot be outside of body.  -->
+</html>
